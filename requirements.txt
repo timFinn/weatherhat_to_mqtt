@@ -1,1 +1,1 @@
-weatherhat==0.0.1
+weatherhat==1.0.0
