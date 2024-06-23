@@ -7,7 +7,7 @@ import paho.mqtt.client as mqtt
 from time import sleep
 from datetime import datetime 
 
-mqtt_server = '192.168.1.152' # Replace with the IP or URI of the MQTT server you use
+mqtt_server = '10.0.0.240' # Replace with the IP or URI of the MQTT server you use
 client_id = "weatherhat"
 
 update_frequency_in_seconds = 5
