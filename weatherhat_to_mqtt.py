@@ -2,10 +2,16 @@
 # 18 February 2022
 # This enables data from the Pimoroni WeatherHat to be sent to a local MQTT server
 
+# Timothy Finnegan
+# 23 June 2024
+# This iteration includes specific constants for my configuration
+#   and removes the timestamp
+
 import weatherhat
 import paho.mqtt.client as mqtt
 from time import sleep
 from datetime import datetime 
+from gpiozero import CPUTemperature
 
 mqtt_server = '10.0.0.240' # Replace with the IP or URI of the MQTT server you use
 client_id = "weatherhat"
@@ -13,6 +19,8 @@ client_id = "weatherhat"
 update_frequency_in_seconds = 1
 
 sensor = weatherhat.WeatherHAT()
+
+cpu = CPUTemperature()
 
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
@@ -27,7 +35,17 @@ client.on_message = on_message
 client.connect(host=mqtt_server)
 
 payload = "{something:true}"
-topic = 'weather'
+cputemp_topic = 'cpu_temp'
+temp_topic = 'temperature'
+humidity_topic = 'humidity'
+rel_hum_topic = 'relative_humidity'
+pressure_topic = 'pressure'
+dewpoint_topic = 'dewpoint'
+light_topic = 'light'
+wind_dir_topic = 'wind_direction'
+wind_spd_topic = 'wind_speed'
+rain_topic = 'rain'
+rain_total_topic = 'rain_total'
 
 import socket
 
@@ -41,11 +59,15 @@ def hostAvail(hostname):
         return False
     return False
 
-while not hostAvail("gardenpi"):
+while not hostAvail("broker"):
     print("Waiting for dbserver")
     sleep(2)
 
 # Continue with code here...
+
+def sendPayload(topic, data)
+    payload = f'{{topic:{data}}}'
+    client.publish(topic=topic, payload=payload, qos=0, retain=False)
 
 while True:
 
@@ -55,16 +77,17 @@ while True:
     # sleep for update frequency second 
     sleep(update_frequency_in_seconds)
 
-    # build the payload
-    payload = f'{{"temperature":{sensor.temperature}, \
-              "pressure":{sensor.pressure}, \
-              "humidity":{sensor.humidity}, \
-              "relative_humidity": {sensor.relative_humidity}, \
-              "dewpoint":{sensor.dewpoint}, \
-              "light":{sensor.lux}, \
-              "wind_direction": {sensor.wind_direction}, \
-              "wind_speed":{sensor.wind_speed}, \
-              "rain": {sensor.rain}, \
-              "rain_total":{sensor.rain_total} }}'
-    client.publish(topic=topic, payload=payload, qos=0, retain=False)
+
+    sendPayload(cputemp_topic, cpu.temperature)
+    sendPayload(temp_topic, sensor.temperature)
+    sendPayload(humidity_topic, sensor.humidity)
+    sendPayload(rel_hum_topic, sensor.relative_humidity)
+    sendPayload(pressure_topic, sensor.pressure)
+    sendPayload(dewpoint_topic, sensor.dewpoint)
+    sendPayload(light_topic, sensor.lux)
+    sendPayload(wind_dir_topic, sensor.wind_direction)
+    sendPayload(wind_spd_topic, sensor.wind_speed)
+    sendPayload(rain_topic, sensor.rain)
+    sendPayload(rain_total_topic, sensor.rain_total)
+
     print(f"sending {payload} to server")
