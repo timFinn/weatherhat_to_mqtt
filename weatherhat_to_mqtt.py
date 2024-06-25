@@ -65,7 +65,7 @@ while not hostAvail("broker"):
 
 # Continue with code here...
 
-def sendPayload(topic, data)
+def sendPayload(topic, data):
     payload = f'{{topic:{data}}}'
     client.publish(topic=topic, payload=payload, qos=0, retain=False)
 
