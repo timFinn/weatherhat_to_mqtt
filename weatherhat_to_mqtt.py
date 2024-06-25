@@ -59,7 +59,7 @@ def hostAvail(hostname):
         return False
     return False
 
-while not hostAvail("broker"):
+while not hostAvail("broker.local"):
     print("Waiting for dbserver")
     sleep(2)
 
