@@ -66,7 +66,7 @@ while not hostAvail("broker.local"):
 
 def sendPayload(topic, data):
     payload = f'{{{topic}:{{data}}}}'
-    client.publish(topic=topic, payload=payload, qos=0, retain=False)
+    client.publish(topic=topic, payload=data, qos=0, retain=False)
     print(f"sending {payload} to server")
 
 while True:
