@@ -34,17 +34,17 @@ client.on_connect = on_connect
 client.on_message = on_message
 client.connect(host=mqtt_server)
 
-cputemp_topic = "cpu_temp"
-temp_topic = "temperature"
-humidity_topic = "humidity"
-rel_hum_topic = "relative_humidity"
-pressure_topic = "pressure"
-dewpoint_topic = "dewpoint"
-light_topic = "light"
-wind_dir_topic = "wind_direction"
-wind_spd_topic = "wind_speed"
-rain_topic = "rain"
-rain_total_topic = "rain_total"
+cputemp_topic = "sensors/pi/cpu_temp"
+temp_topic = "sensors/weather/temperature"
+humidity_topic = "sensors/weather/humidity"
+rel_hum_topic = "sensors/weather/relative_humidity"
+pressure_topic = "sensors/weather/pressure"
+dewpoint_topic = "sensors/weather/dewpoint"
+light_topic = "sensors/weather/light"
+wind_dir_topic = "sensors/weather/wind_direction"
+wind_spd_topic = "sensors/weather/wind_speed"
+rain_topic = "sensors/weather/rain"
+rain_total_topic = "sensors/weather/rain_total"
 
 import socket
 
@@ -65,7 +65,7 @@ while not hostAvail("broker.local"):
 # Continue with code here...
 
 def sendPayload(topic, data):
-    payload = f'{{topic:{data}}}'
+    payload = f'{{{topic}:{{data}}}}'
     client.publish(topic=topic, payload=payload, qos=0, retain=False)
     print(f"sending {payload} to server")
 
