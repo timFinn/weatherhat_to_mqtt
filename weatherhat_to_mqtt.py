@@ -9,6 +9,7 @@
 
 import weatherhat
 import paho.mqtt.client as mqtt
+import json
 from time import sleep
 from datetime import datetime 
 from gpiozero import CPUTemperature
@@ -65,7 +66,11 @@ while not hostAvail("broker.local"):
 # Continue with code here...
 
 def sendPayload(topic, data):
-    payload = f"{{topic}:{data}}"
+    payload = json.dumps(
+        {
+            topic:data
+        }
+    )
     client.publish(topic=topic, payload=payload, qos=0, retain=False)
     print(f"sending {payload} to server")
 
