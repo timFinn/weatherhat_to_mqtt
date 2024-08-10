@@ -76,8 +76,11 @@ def sendPayload(topic, data):
 
 while True:
 
-    # update the sensor readings
-    sensor.update(interval=1.0)
+    try:
+        # update the sensor readings
+        sensor.update(interval=1.0)
+    except OSError:
+        print("Sensor update failed!")
     
     # sleep for update frequency second 
     sleep(update_frequency_in_seconds)
